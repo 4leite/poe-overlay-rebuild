@@ -1,13 +1,33 @@
 {
-  "name": "poe-overlay-rebuild",
-  "version": "0.0.0",
+  "name": "poe-overlay",
+  "version": "1.0.0",
+  "description": "An Overlay for Path of Exile. Built with Electron and Angular.",
+  "main": "dist/main/index.js",
+  "type": "module",
   "scripts": {
+    "postinstall": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/update-electron-vendors.js",
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build:main": "vite build --config ./projects/main/vite.config.ts",
+    "build:preload": "vite build --config ./projects/preload/vite.config.ts",
+    "build:renderer": "ng build",
+    "build": "npm run build:main && npm run build:preload && npm run build:renderer",
+    "package": "cross-env MODE=production npm run build && electron-builder build --config electron-builder.yml",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PoE-Overlay-Community/PoE-Overlay-Community-Fork.git"
+  },
+  "author": {
+    "name": "PoE-Overlay-Community",
+    "email": "noreply@poe-overlay-community.com"
+  },
+  "bugs": {
+    "url": "https://github.com/PoE-Overlay-Community/PoE-Overlay-Community-Fork/issues"
+  },
+  "homepage": "https://github.com/PoE-Overlay-Community/PoE-Overlay-Community-Fork",
   "private": true,
   "dependencies": {
     "@angular/animations": "^17.1.0",
@@ -18,20 +38,27 @@
     "@angular/platform-browser": "^17.1.0",
     "@angular/platform-browser-dynamic": "^17.1.0",
     "@angular/router": "^17.1.0",
+    "electron-updater": "^6.1.7",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^17.1.2",
     "@angular/cli": "^17.1.2",
     "@angular/compiler-cli": "^17.1.0",
     "@types/jasmine": "~5.1.0",
+    "@types/node": "^20.11.16",
+    "cross-env": "^7.0.3",
+    "electron": "^28.2.1",
+    "electron-builder": "^24.9.1",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.3.2"
+    "typescript": "~5.3.2",
+    "vite": "^5.0.12"
   }
 }

@@ -1,0 +1,8 @@
+directories:
+  output: release
+
+files:
+  - dist/**
+
+linux:
+  target: deb
