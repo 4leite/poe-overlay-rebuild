@@ -2,7 +2,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./dist/out-tsc",
+    "noEmit": true,
     "forceConsistentCasingInFileNames": false,
     "strict": false,
     "noImplicitOverride": false,
@@ -27,6 +27,7 @@
     ],
     "paths": {
       "path": [ "./node_modules/path-browserify" ],
+      "@titlebar": [ "../titlebar/src/index.ts" ],
       "@app/*": [
         "./src/app/core/*"
       ],

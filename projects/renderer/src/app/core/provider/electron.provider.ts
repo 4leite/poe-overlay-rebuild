@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core'
-import { IpcRenderer, ipcRenderer } from 'electron' //renderer
+import type { IpcRenderer } from 'electron' // renderer
 import type { Clipboard, Shell } from 'electron/common'
-import type { IpcMain, GlobalShortcut, Screen, App, BrowserWindow } from 'electron' //main
-import { getCurrentWindow, app, screen, shell, clipboard, globalShortcut, ipcMain } from '@electron/remote'
-
+import type { IpcMain, GlobalShortcut, Screen, App, BrowserWindow } from 'electron/main' //main
 
 export interface Remote {
   getCurrentWindow: () => BrowserWindow
@@ -12,6 +10,7 @@ export interface Remote {
   shell: Shell
   clipboard: Clipboard
   globalShortcut: GlobalShortcut
+  ipcMain: IpcMain
 }
 
 @Injectable({
@@ -20,35 +19,29 @@ export interface Remote {
 export class ElectronProvider {
   // private readonly electron: Electron
 
-  constructor() {
-    console.warn('construct electron provider')
-    if (window?.require) {
-      // this.electron = window.require('electron') as Electron
-    } else {
-      console.warn('window.require not defined.')
-    }
-  }
+  constructor() {  }
 
   // TODO: refactor
   // Remote was removed: this should be implemented with ipcRender / ipcMain instead
   // see https://github.com/electron/electron/issues/21408
   // https://nornagon.medium.com/electrons-remote-module-considered-harmful-70d69500f31
   public provideRemote(): Remote {
-    return {
+    return (window as any).remote as Remote
+    /*{
       app,
       getCurrentWindow: () => getCurrentWindow(),
       screen,
       shell,
       clipboard,
       globalShortcut
-    }
+    }*/
   }
 
   public provideIpcRenderer(): IpcRenderer {
-    return ipcRenderer
+    return (window as any).ipcRenderer
   }
 
   public provideIpcMain(): IpcMain {
-    return ipcMain
+    return this.provideRemote().ipcMain
   }
 }

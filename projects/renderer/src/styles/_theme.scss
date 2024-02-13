@@ -4,10 +4,13 @@
 */
 @use '@angular/material' as mat;
 
+@include mat.core();
+
 // TODO: deprecated?
-@import '@angular/material/theming';
+// @import '@angular/material/theming';
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
+// @include mat.legacy-core();
 
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
@@ -139,6 +142,7 @@ mat.$dark-theme-background-palette: (
   disabled-list-option: $dark-bg-lighter-10,
 );
 
+// TODO: material fonts
 // Compute font config
 // TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
 //  The following line adds:
@@ -148,8 +152,9 @@ mat.$dark-theme-background-palette: (
 //  If you don't need the default component typographies but still want the hierarchy styles,
 //  you can delete this line and instead use:
 //    `@include mat.legacy-typography-hierarchy($fontConfig);`
-@include mat.all-legacy-component-typographies($fontConfig);
-@include mat.legacy-core();
+// @include mat.define-legacy-typography-config();
+// @include mat.all-legacy-component-typographies($fontConfig);
+// @include mat.legacy-core();
 
 // Theme Config
 
@@ -181,7 +186,7 @@ $mat-primary: (
       darker: $dark-primary-text,
     ),
 );
-$theme-primary: mat-palette($mat-primary, main, lighter, darker);
+$theme-primary: mat.define-palette($mat-primary, main, lighter, darker);
 
 body {
   --accent-color: $accent;
@@ -247,11 +252,15 @@ $altTheme: mat.define-dark-theme((
 ));
 
 // Theme Init
+
+// TODO: deprecated?
+/*
 @include mat.all-legacy-component-themes($theme);
 
 .theme-alternate {
   @include mat.all-legacy-component-themes($altTheme);
 }
+*/
 
 // Specific component overrides, pieces that are not in line with the general theming
 

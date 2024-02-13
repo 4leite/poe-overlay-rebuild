@@ -1,5 +1,6 @@
 import type { IpcMain } from 'electron'
-import { autoUpdater } from 'electron-updater'
+import updater from 'electron-updater'
+const { autoUpdater } = updater
 
 let checkForUpdatesHandle: NodeJS.Timeout | null = null
 

@@ -21,7 +21,8 @@ import * as hook from './hook'
 import * as log from './log'
 import * as robot from './robot'
 import { State } from './state'
-import { initialize } from '@electron/remote/main'
+import { initialize, enable } from '@electron/remote/main'
+// import electronReload from 'electron-reload'
 
 // TODO: fix win?
 
@@ -248,6 +249,9 @@ function createWindow(): BrowserWindow {
     skipTaskbar: true,
     show: false,
   })
+
+  enable(win.webContents)
+
   win.setSize(bounds.width, bounds.height)    // Explicitly set size after creating the window since some OS'es don't allow an initial size larger than the display's size.
   win.removeMenu()
   win.setIgnoreMouseEvents(true, {forward: true})
@@ -311,6 +315,8 @@ ipcMain.on('open-route', (event, route: string) => {
         closable: !isThread,
       })
 
+      enable(newWin.webContents)
+
       newWin.removeMenu()
 
       // TODO: remote
@@ -341,10 +347,9 @@ ipcMain.on('open-route', (event, route: string) => {
 function loadApp(self: BrowserWindow, route: string): void {
   if (serve) {
     /*
-    console.log('herewego', __dirname)
-    const electronReload = require('electron-reload')
-    electronReload(__dirname, {
-      electron: path.join(__dirname, 'node_modules', '.bin', 'electron'),
+    console.log('should be here', app.getAppPath())
+    electronReload(app.getAppPath(), {
+      electron: path.join(app.getAppPath(), 'node_modules', '.bin', 'electron'),
     })
     */
     self.loadURL('http://localhost:4200' + route)
@@ -352,7 +357,7 @@ function loadApp(self: BrowserWindow, route: string): void {
   } else {
     console.log('should ne be here')
     const appUrl = url.format({
-      pathname: path.join('__dirname', 'dist', 'index.html'), // TODO __dirname
+      pathname: path.join(app.getAppPath(), 'dist/main', 'index.html'), // TODO __dirname
       protocol: 'file:',
       slashes: true,
     })
@@ -363,10 +368,12 @@ function loadApp(self: BrowserWindow, route: string): void {
 /* tray */
 
 function createTray(): Tray {
+  console.log('createTray')
   const iconFolder = serve ? 'src' : 'dist'
   const iconFile = /^win/.test(process.platform) ? 'favicon.ico' : 'favicon.png'
-  console.log('againwego', __dirname)
-  tray = new Tray(path.join(__dirname, iconFolder, iconFile)) // TODO: dirname
+  const iconPath = path.join(app.getAppPath(), 'projects/renderer/src', iconFile)
+  console.log('againwego', iconPath)
+  tray = new Tray(iconPath) // TODO: icon build
 
   const items: MenuItemConstructorOptions[] = [
     {

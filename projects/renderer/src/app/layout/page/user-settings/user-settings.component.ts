@@ -17,6 +17,7 @@ import { PoEAccountService } from '../../../shared/module/poe/service/account/ac
 import { UserSettingsFeatureContainerComponent } from '../../component'
 import { UserSettingsService } from '../../service'
 import { UserSettings, UserSettingsFeature } from '../../type'
+import { Titlebar, Color } from '@titlebar'
 
 @Component({
   selector: 'app-user-settings',
@@ -73,7 +74,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
   }
 
   private createTitlebar(): void {
-    const { Titlebar, Color } = window.require('custom-electron-titlebar')
+    
     const titlebar = new Titlebar({
       backgroundColor: Color.fromHex('#7f7f7f'),
       menu: null,
@@ -81,7 +82,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
 
     titlebar.on(
       'before-close',
-      () => new Promise((resolve, reject) => this.save().subscribe(resolve, reject))
+      () => new Promise((resolve, reject) => this.save().subscribe(() => resolve(), reject))
     )
 
     titlebar.updateTitle('PoE Overlay - Settings')

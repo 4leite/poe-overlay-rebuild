@@ -20,7 +20,9 @@ export class BrowserService {
   public retrieve(url: string): Observable<void> {
     const parent = this.electron.getCurrentWindow()
     const subject = new Subject<void>()
+    console.warn('new BrowserWindow not created')
     /*
+    // TODO: new BrowserWindow
     const win = new BrowserWindow({
       parent,
       show: false,

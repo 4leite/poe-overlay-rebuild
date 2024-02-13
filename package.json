@@ -13,7 +13,8 @@
     "build:renderer": "ng build",
     "build": "npm run build:main && npm run build:preload && npm run build:renderer",
     "package": "cross-env MODE=production npm run build && electron-builder build --config electron-builder.yml",
-    "watch": "ng build --watch --configuration development",
+    "watch:angular": "ng serve --watch --configuration development",
+    "vite": "vite",
     "test": "ng test"
   },
   "repository": {
@@ -48,6 +49,7 @@
     "active-win": "^8.1.1",
     "auto-launch": "^5.0.6",
     "electron-log": "^5.1.1",
+    "electron-reload": "^2.0.0-alpha.1",
     "electron-updater": "^6.1.7",
     "localforage": "^1.10.0",
     "moment": "^2.30.1",
