@@ -17,7 +17,7 @@ import { PoEAccountService } from '../../../shared/module/poe/service/account/ac
 import { UserSettingsFeatureContainerComponent } from '../../component'
 import { UserSettingsService } from '../../service'
 import { UserSettings, UserSettingsFeature } from '../../type'
-import { Titlebar, Color } from '@titlebar'
+import { Titlebar, Color } from '../../../../../../titlebar/src/index'
 
 @Component({
   selector: 'app-user-settings',
