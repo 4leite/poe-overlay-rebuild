@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core'
 import { ElectronProvider, Remote } from '@app/provider'
 import { environment } from '@env/environment'
-import type { BrowserWindow } from 'electron' //main
 import { Observable, Subject } from 'rxjs'
 import { Dialog, DialogRefService, DialogType } from './dialog/dialog-ref.service'
 
-// TODO: important! make good new BrowserWindow
+const { BrowserWindow } = (window as any).remote as Remote;
 
 @Injectable({
   providedIn: 'root',
@@ -18,11 +17,10 @@ export class BrowserService {
   }
 
   public retrieve(url: string): Observable<void> {
+    
     const parent = this.electron.getCurrentWindow()
     const subject = new Subject<void>()
-    console.warn('new BrowserWindow not created')
-    /*
-    // TODO: new BrowserWindow
+
     const win = new BrowserWindow({
       parent,
       show: false,
@@ -34,14 +32,15 @@ export class BrowserService {
       win.close()
     })
     win.loadURL(url)
-    */
+  
     return subject
   }
 
   public openAndWait(url: string, smallerWindow: boolean = false): Observable<void> {
     const subject = new Subject<void>()
     const parent = this.electron.getCurrentWindow()
-    /*const [width, height] = parent.getSize()
+    const [width, height] = parent.getSize()
+
     const win = new BrowserWindow({
       center: true,
       parent,
@@ -65,7 +64,8 @@ export class BrowserService {
       win.webContents.zoomFactor = parent.webContents.zoomFactor
       win.show()
     })
-    win.loadURL(url)*/
+    win.loadURL(url)
+
     return subject
   }
 
@@ -75,7 +75,7 @@ export class BrowserService {
     } else {
       const parent = this.electron.getCurrentWindow()
       const [width, height] = parent.getSize()
-      /*
+
       const win = new BrowserWindow({
         center: true,
         parent,
@@ -116,11 +116,10 @@ export class BrowserService {
         win.show()
       })
       win.loadURL(url)
-      */
     }
   }
 
-  private setupCookieSharing(browserWindow: BrowserWindow) {
+  private setupCookieSharing(browserWindow: any) {
     browserWindow.webContents.session.webRequest.onHeadersReceived({
       urls: environment.cookieSharingUrls
     }, (details, next) => {

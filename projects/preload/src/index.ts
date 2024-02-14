@@ -14,6 +14,8 @@ contextBridge.exposeInMainWorld('electron', {
 })
 */
 
+export type ElectronRemote = typeof remote;
+
 (window as any).ipcRenderer = ipcRenderer;
 (window as any).remote = remote;
 

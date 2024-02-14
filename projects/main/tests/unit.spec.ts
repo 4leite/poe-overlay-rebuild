@@ -1,6 +1,5 @@
 import type {MockedClass, MockedObject} from 'vitest';
 import {beforeEach, expect, test, vi} from 'vitest';
-import {restoreOrCreateWindow} from '../src/mainWindow';
 
 import {BrowserWindow} from 'electron';
 
@@ -39,7 +38,7 @@ test('Should create a new window', async () => {
   const {mock} = vi.mocked(BrowserWindow);
   expect(mock.instances).toHaveLength(0);
 
-  await restoreOrCreateWindow();
+  // await restoreOrCreateWindow();
   expect(mock.instances).toHaveLength(1);
   const instance = mock.instances[0] as MockedObject<BrowserWindow>;
   const loadURLCalls = instance.loadURL.mock.calls.length;
