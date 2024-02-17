@@ -25,8 +25,9 @@ import { initialize, enable } from '@electron/remote/main'
 // import electronReload from 'electron-reload'
 
 // TODO: fix win?
-
 initialize();
+
+const VITE_DEV_SERVER_URL = import.meta.env.VITE_DEV_SERVER_URL || 'http://localhost:4200'
 
 if (!app.requestSingleInstanceLock()) {
   app.exit()
@@ -352,7 +353,7 @@ function loadApp(self: BrowserWindow, route: string): void {
       electron: path.join(app.getAppPath(), 'node_modules', '.bin', 'electron'),
     })
     */
-    self.loadURL('http://localhost:4200' + route)
+    self.loadURL('VITE_DEV_SERVER_URL' + route)
     self.webContents.openDevTools({ mode: 'undocked' })
   } else {
     console.log('should ne be here')

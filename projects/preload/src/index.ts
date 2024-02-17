@@ -3,6 +3,7 @@
  */
 import remote from '@electron/remote'
 import { ipcRenderer } from 'electron'
+import activeWin from 'active-win'
 //import { initialize } from '@electron/remote/main'
 
 //initialize();
@@ -18,5 +19,6 @@ export type ElectronRemote = typeof remote;
 
 (window as any).ipcRenderer = ipcRenderer;
 (window as any).remote = remote;
+(window as any).activeWin = activeWin;
 
-console.log('window.remote is defined', !!(window as any).remote)
+console.log('window.remote initialise', !!(window as any).remote)

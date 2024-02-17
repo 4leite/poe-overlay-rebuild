@@ -20,7 +20,9 @@ function setupMainPackageWatcher({resolvedUrls}) {
   process.env.VITE_DEV_SERVER_URL = resolvedUrls?.local[0];
 
   /** @type {ChildProcess | null} */
-  let electronApp = null;
+  const electronApp = {
+    current: undefined
+  }
 
   return build({
     mode,
@@ -36,21 +38,25 @@ function setupMainPackageWatcher({resolvedUrls}) {
     plugins: [
       {
         name: 'reload-app-on-main-package-change',
-        writeBundle() {
+        closeBundle: () => {
+          console.log('**** close bundle');
+        },
+        writeBundle: () => {
+          console.log('**** write bundle');
           /** Kill electron if process already exist */
-          if (electronApp !== null) {
-            electronApp.removeListener('exit', process.exit);
-            electronApp.kill('SIGINT');
-            electronApp = null;
+          if (electronApp.current) {
+            electronApp.current.removeListener('exit', process.exit);
+            electronApp.current.kill('SIGINT');
+            electronApp.current = undefined;
           }
 
           /** Spawn new electron process */
-          electronApp = spawn(String(electronPath), ['--inspect', '--serve', '.'], {
+          electronApp.current = spawn(String(electronPath), ['--inspect', '--serve', '.'], {
             stdio: 'inherit',
           });
 
           /** Stops the watch script when the application has been quit */
-          electronApp.addListener('exit', process.exit);
+          electronApp.current.addListener('exit', process.exit);
         },
       },
     ],

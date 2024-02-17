@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": false,
+    "outDir": "../../scripts",
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "strict": true,
+    "isolatedModules": true,
+    "types": ["node"],
+    "baseUrl": ".",
+  },
+  "include": ["src/electron.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"],
+}
