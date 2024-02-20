@@ -364,9 +364,9 @@ function loadApp(self: BrowserWindow, route: string): void {
 
 function createTray(): Tray {
   const iconFile = /^win/.test(process.platform) ? 'favicon.ico' : 'favicon.png'
-  const iconPath = path.join(app.getAppPath(), 'projects/renderer/src', iconFile)
+  const iconPath = path.join(app.getAppPath(), 'dist/renderer/browser', iconFile)
 
-  tray = new Tray(iconPath) // TODO: icon build
+  tray = new Tray(iconPath)
 
   const items: MenuItemConstructorOptions[] = [
     {
