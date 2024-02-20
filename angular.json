@@ -40,7 +40,7 @@
               "projects/renderer/src/assets/fonts/fonts.css"
             ],
             "allowedCommonJsDependencies": [
-              "path"
+              "*"
             ],
             "scripts": []
           },
@@ -60,8 +60,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "32mb",
-                  "maximumError": "64mb"
+                  "maximumWarning": "64mb",
+                  "maximumError": "128mb"
                 },
                 {
                   "type": "anyComponentStyle",

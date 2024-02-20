@@ -22,12 +22,23 @@ import * as log from './log'
 import * as robot from './robot'
 import { State } from './state'
 import { initialize, enable } from '@electron/remote/main'
-// import electronReload from 'electron-reload'
 
 // TODO: fix win?
 initialize();
 
 const VITE_DEV_SERVER_URL = import.meta.env.VITE_DEV_SERVER_URL || 'http://localhost:4200'
+const args = process.argv.slice(1)
+
+// tslint:disable-next-line:no-console
+console.info(`App start args`, args)
+
+const serve = args.some((val) => val === '--serve')
+const debug = args.some((val) => val === '--dev')
+
+import.meta.hot?.on('vite:afterUpdate', () => console.log('main afterUpdate'));
+import.meta.hot?.on('vite:beforeFullReload', () => console.log('main beforeFullReload'));
+import.meta.hot?.on('restart', () => console.log('restart'));
+import.meta.hot?.on('reload', () => console.log('reload'));
 
 if (!app.requestSingleInstanceLock()) {
   app.exit()
@@ -58,13 +69,6 @@ if (!state.hardwareAcceleration) {
   // tslint:disable-next-line:no-console
   console.info('App started with disabled hardware acceleration.')
 }
-
-const args = process.argv.slice(1)
-// tslint:disable-next-line:no-console
-console.info('App args', args)
-
-const serve = args.some((val) => val === '--serve')
-const debug = args.some((val) => val === '--dev')
 
 let win: BrowserWindow | undefined
 let tray: Tray
@@ -271,16 +275,13 @@ function createWindow(): BrowserWindow {
     }
   })
 
+  win.webContents.on('devtools-opened', () => win?.setIgnoreMouseEvents(true, {forward: true}))
+
   loadApp(win, '')
 
   win.on('closed', () => {
     win = undefined
   })
-
-  if (serve) {
-    // Electron bug workaround: this must be triggered after the devtools loaded
-    win.setIgnoreMouseEvents(true, { forward: true })
-  }
 
   return win
 }
@@ -347,18 +348,11 @@ ipcMain.on('open-route', (event, route: string) => {
 
 function loadApp(self: BrowserWindow, route: string): void {
   if (serve) {
-    /*
-    console.log('should be here', app.getAppPath())
-    electronReload(app.getAppPath(), {
-      electron: path.join(app.getAppPath(), 'node_modules', '.bin', 'electron'),
-    })
-    */
-    self.loadURL('VITE_DEV_SERVER_URL' + route)
+    self.loadURL(VITE_DEV_SERVER_URL + route)
     self.webContents.openDevTools({ mode: 'undocked' })
   } else {
-    console.log('should ne be here')
     const appUrl = url.format({
-      pathname: path.join(app.getAppPath(), 'dist/main', 'index.html'), // TODO __dirname
+      pathname: path.join(app.getAppPath(), 'dist/renderer/browser', 'index.html'),
       protocol: 'file:',
       slashes: true,
     })
@@ -369,12 +363,10 @@ function loadApp(self: BrowserWindow, route: string): void {
 /* tray */
 
 function createTray(): Tray {
-  console.log('createTray')
-  const iconFolder = serve ? 'src' : 'dist'
   const iconFile = /^win/.test(process.platform) ? 'favicon.ico' : 'favicon.png'
-  const iconPath = path.join(app.getAppPath(), 'projects/renderer/src', iconFile)
-  console.log('againwego', iconPath)
-  tray = new Tray(iconPath) // TODO: icon build
+  const iconPath = path.join(app.getAppPath(), 'dist/renderer/browser', iconFile)
+
+  tray = new Tray(iconPath)
 
   const items: MenuItemConstructorOptions[] = [
     {
@@ -460,7 +452,6 @@ try {
   app.on('ready', () => {
     /* delay create window in order to support transparent windows at linux. */
     setTimeout(() => {
-      console.log('create window')
       createWindow()
       createTray()
     }, 300)

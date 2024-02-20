@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import baseItemTypes from '../../../../../assets/poe/base-item-types-v2.json'
+import baseItemTypesArray from '../../../../../assets/poe/base-item-types-normalised.json'
 import { EnumValues } from '../../../../core/class'
 import { BaseItemType, BaseItemTypeNameMap, Language } from '../type'
 
@@ -8,14 +8,19 @@ import { BaseItemType, BaseItemTypeNameMap, Language } from '../type'
 })
 export class BaseItemTypesProvider {
   private readonly baseItemTypeNames: BaseItemTypeNameMap[] = []
+  private readonly baseItemTypes: Map<string, BaseItemType>
 
   constructor() {
     const languages = new EnumValues(Language)
+    
     for (const language of languages.keys) {
       this.baseItemTypeNames[language] = {}
     }
-    for (const key in baseItemTypes) {
-      const baseItemType = this.provideBaseItemType(key)
+    this.baseItemTypes = new Map()
+    for (const item of baseItemTypesArray as [string,BaseItemType][]) {
+      const key = crypto.randomUUID()
+      const baseItemType = item[1]
+      this.baseItemTypes.set(key, baseItemType)
       for (const language in baseItemType.names) {
         const name = baseItemType.names[language]
         if (!this.baseItemTypeNames[+language][name]) {
@@ -26,7 +31,7 @@ export class BaseItemTypesProvider {
   }
 
   public provideBaseItemType(id: string): BaseItemType {
-    return baseItemTypes[id]
+    return this.baseItemTypes.get(id)
   }
 
   public provideNames(language: Language): BaseItemTypeNameMap {
