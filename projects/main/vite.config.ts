@@ -30,6 +30,7 @@ const config: UserConfig = {
       formats: ['es'],
     },
     rollupOptions: {
+      external: ['electron'],
       output: {
         entryFileNames: '[name].js',
       },

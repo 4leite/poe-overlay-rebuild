@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core'
 import type { IpcRenderer } from 'electron' // renderer
 import type { IpcMain } from 'electron/main' //main
-import type { ElectronRemote } from '../../../../../preload/src'
-
-export type Remote = ElectronRemote;
+import remote from '@electron/remote'
+export type Remote = typeof remote;
 
 @Injectable({
   providedIn: 'root',

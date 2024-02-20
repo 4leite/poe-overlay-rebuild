@@ -1,6 +1,6 @@
 import { Rectangle } from 'electron'
 import { addon, windowManager } from 'node-window-manager'
-import activeWin from 'active-win'
+import { activeWindowAsync } from '@miniben90/x-win';
 
 export interface Window {
   processId: number
@@ -13,19 +13,22 @@ export interface Window {
 export async function getActiveWindow(): Promise<Window | undefined> {
   try {
     if (process.platform === 'linux') {
-      const active = await activeWin()
+
+      const active = await activeWindowAsync();
 
       if (!active) {
         return undefined
       }
 
-      return {
-        processId: active.owner.processId,
-        path: active.owner.path,
-        bounds: () => active.bounds,
+      const window = {
+        processId: active.info.processId,
+        path: active.info.path,
+        bounds: () => active.position,
         title: () => active.title,
         bringToTop: () => console.log('bring to top not supported on linux')
       }
+
+      return window;
     }
 
     if (process.platform === 'win32' || process.platform === 'darwin') {

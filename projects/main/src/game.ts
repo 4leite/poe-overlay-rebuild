@@ -100,17 +100,17 @@ export class Game {
       return
     }
 
-    this.window = window
-    this.active = true
-    this.bounds = window.bounds()
-
     const poeDir = process.platform === 'linux' ?  getLinuxDir(window.processId) : windowPath.dir
 
     if (!poeDir) {
       this.active = false
       return
     }
-    
+
+    this.window = window
+    this.active = true
+    this.bounds = window.bounds()
+
     // Kakao client uses a different logfile name
     const logFileName = windowPath.name.endsWith('_kg') ? "KakaoClient.txt" : "Client.txt"
 
